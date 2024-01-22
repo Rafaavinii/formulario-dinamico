@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Formulário Dinâmico</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Criar Formulário</h2>
+
+    {% for mensagem in messages %}
+        {% if mensagem.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+                {{ mensagem }}
+            </div>
+        {% endif %}
+        {% if mensagem.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+                {{ mensagem }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <form id="formularioDinamico" method="post" action="{% url 'criar_formulario' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="titulo">Título do Formulário:</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Descrição:</label>
+            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
+        </div>
+
+        <div id="questoes-container">
+            <!-- Aqui serão adicionadas as questões dinamicamente -->
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="adicionarQuestao()">Adicionar Questão</button>
+        <button type="submit" class="btn btn-success">Salvar Formulário</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    let questaoCount = 1;
+
+    function adicionarQuestao() {
+        const container = document.getElementById('questoes-container');
+
+        const questaoHTML = `
+            <div class="card mt-3">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="questao${questaoCount}">Questão ${questaoCount}:</label>
+                        <input type="text" class="form-control" id="questao${questaoCount}" name="questao${questaoCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo${questaoCount}">Tipo de Questão:</label>
+                        <select class="form-control" id="tipo${questaoCount}" name="tipo${questaoCount}" required>
+                            <option value="escolha_unica">Escolha Única</option>
+                            <option value="multipla_escolha">Escolha Múltipla</option>
+                            <option value="texto">Texto</option>
+                            <option value="true_false">Verdadeiro ou Falso</option>
+                            <option value="data">Data</option>
+                            <option value="numero">Número</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removerQuestao(this)">Remover Questão</button>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML += questaoHTML;
+        questaoCount++;
+    }
+
+    function removerQuestao(botao) {
+        const questao = botao.parentNode.parentNode;
+        questao.parentNode.removeChild(questao);
+
+        // Atualizar os números das questões após a remoção
+        const questoes = document.querySelectorAll('#questoes-container .card');
+        questaoCount = 1;
+        questoes.forEach((element) => {
+            const label = element.querySelector('label');
+            label.innerText = `Questão ${questaoCount}:`;
+            questaoCount++;
+        });
+    }
+</script>
+
+</body>
+</html>
