@@ -1,28 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'formulario/criar_formulario.css' %}">
     <title>Formulário Dinâmico</title>
 </head>
 <body>
 
-<div class="container mt-5">
-    <h2 class="mb-4">Criar Formulário</h2>
+<div class="container mt-5 formulario p-5">
+    <h2 class="mb-4 titulo">Criar Formulário</h2>
 
-    {% for mensagem in messages %}
-        {% if mensagem.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-                {{ mensagem }}
-            </div>
-        {% endif %}
-        {% if mensagem.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-                {{ mensagem }}
-            </div>
-        {% endif %}
-    {% endfor %}
     <form id="formularioDinamico" method="post" action="{% url 'criar_formulario' %}">
         {% csrf_token %}
         <div class="form-group">
@@ -34,7 +25,7 @@
             <label for="descricao">Descrição:</label>
             <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
         </div>
-
+ 
         <div id="questoes-container">
             <!-- Aqui serão adicionadas as questões dinamicamente -->
         </div>
@@ -63,7 +54,7 @@
                     </div>
                     <div class="form-group">
                         <label for="tipo${questaoCount}">Tipo de Questão:</label>
-                        <select class="form-control" id="tipo${questaoCount}" name="tipo${questaoCount}" required>
+                        <select class="form-control" id="tipo${questaoCount}" name="tipo${questaoCount}" onchange="tipoQuestaoChange(this)" required>
                             <option value="escolha_unica">Escolha Única</option>
                             <option value="multipla_escolha">Escolha Múltipla</option>
                             <option value="texto">Texto</option>
@@ -72,6 +63,14 @@
                             <option value="numero">Número</option>
                         </select>
                     </div>
+                    <div class="form-group" id="opcoes${questaoCount}" style="display: block;">
+                        <label>Opções de Resposta:</label>
+                        <button type="button" class="btn btn-secondary" onclick="adicionarOpcao(${questaoCount})">Adicionar Opção</button>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="opcao1-${questaoCount}" name="opcoes${questaoCount}[]" disabled>
+                            <input type="text" class="form-control" id="opcao1-text-${questaoCount}" name="opcoesText${questaoCount}[]" placeholder="Opção 1">
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-danger" onclick="removerQuestao(this)">Remover Questão</button>
                 </div>
             </div>
@@ -79,6 +78,37 @@
 
         container.innerHTML += questaoHTML;
         questaoCount++;
+    }
+
+    function tipoQuestaoChange(select) {
+        const questao = select.parentNode.parentNode;
+        const questaoNumero = questao.querySelector('label').innerText.split(' ')[1][0];
+        const opcoesDiv = questao.querySelector(`#opcoes${questaoNumero}`);
+        const opcaoCheckbox = questao.querySelector(`#opcao1-${questaoNumero}`);
+        const opcaoInput = questao.querySelector(`#opcao1-text-${questaoNumero}`);
+        
+        if (select.value === 'multipla_escolha') {
+            opcoesDiv.style.display = 'block';
+            opcaoCheckbox.disabled = false;
+        } else {
+            opcoesDiv.style.display = 'none';
+            opcaoCheckbox.disabled = true;
+            opcaoInput.value = '';  // Limpar o campo de texto se o tipo não for escolha múltipla
+        }
+    }
+
+    function adicionarOpcao(questaoNumero) {
+        const opcoesDiv = document.getElementById(`opcoes${questaoNumero}`);
+        const opcaoCount = opcoesDiv.querySelectorAll('.form-check').length + 1;
+
+        const opcaoHTML = `
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="opcao${opcaoCount}-${questaoNumero}" name="opcoes${questaoNumero}[]" disabled>
+                <input type="text" class="form-control" id="opcao${opcaoCount}-text-${questaoNumero}" name="opcoesText${questaoNumero}[]" placeholder="Opção ${opcaoCount}">
+            </div>
+        `;
+
+        opcoesDiv.innerHTML += opcaoHTML;
     }
 
     function removerQuestao(botao) {
