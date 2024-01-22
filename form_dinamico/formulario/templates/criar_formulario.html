@@ -16,6 +16,7 @@
 
     <form id="formularioDinamico" method="post" action="{% url 'criar_formulario' %}">
         {% csrf_token %}
+        <input type="hidden" name="num_questoes" id="num_questoes" value="0">
         <div class="form-group">
             <label for="titulo">Título do Formulário:</label>
             <input type="text" class="form-control" id="titulo" name="titulo" required>
@@ -77,7 +78,9 @@
         `;
 
         container.innerHTML += questaoHTML;
+        document.getElementById('num_questoes').value = questaoCount;
         questaoCount++;
+
     }
 
     function tipoQuestaoChange(select) {
@@ -96,7 +99,6 @@
             opcaoInput.value = '';  // Limpar o campo de texto se o tipo não for escolha múltipla
         }
     }
-
     function adicionarOpcao(questaoNumero) {
         const opcoesDiv = document.getElementById(`opcoes${questaoNumero}`);
         const opcaoCount = opcoesDiv.querySelectorAll('.form-check').length + 1;
@@ -109,6 +111,7 @@
         `;
 
         opcoesDiv.innerHTML += opcaoHTML;
+
     }
 
     function removerQuestao(botao) {

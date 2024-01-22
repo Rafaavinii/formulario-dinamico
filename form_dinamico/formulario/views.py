@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect
 from datetime import datetime
-from .models import FormDinamico
+from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
 
 def criar_formulario(request):
     if request.method == 'GET':
+        print(Questao.objects.all()[0].tipo)
         return render(request, 'criar_formulario.html')
     
     elif request.method == 'POST':
         titulo = request.POST.get('titulo')
-        print(titulo)
+        num_questoes = request.POST.get('num_questoes')
         descricao = request.POST.get('descricao')
         data = datetime.now()
         user = 1
@@ -23,6 +24,16 @@ def criar_formulario(request):
         )
 
         formulario.save()
+
+        for i in range(1, int(num_questoes)):
+            questao_texto = request.POST.get(f'questao{i}')
+            tipo = request.POST.get(f'tipo{i}')
+            questao = Questao.objects.create(
+                questao_texto = questao_texto,
+                tipo = tipo,
+                formulario = formulario
+            )
+            questao.save()
 
         messages.success(request, 'Formulário criado com sucesso!')
 
