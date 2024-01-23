@@ -3,10 +3,11 @@ from datetime import datetime
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+import json
 
 def criar_formulario(request):
     if request.method == 'GET':
-        print(Questao.objects.all()[0].tipo)
+        print(Questao.objects.get(id=24).itens)
         return render(request, 'criar_formulario.html')
     
     elif request.method == 'POST':
@@ -24,17 +25,26 @@ def criar_formulario(request):
         )
 
         formulario.save()
+        
 
-        for i in range(1, int(num_questoes)):
+        for i in range(1, int(num_questoes)+1):
             questao_texto = request.POST.get(f'questao{i}')
             tipo = request.POST.get(f'tipo{i}')
+            num_opcoes = request.POST.get(f'num_opcoes{i}')
+
+            itens_lista = []
+            for j in range(1, int(num_opcoes)+1):
+                itens_lista.append(request.POST.get(f'opcao{j}-text-{i}'))
+            itens_json = json.dumps(itens_lista, ensure_ascii=False)
+
             questao = Questao.objects.create(
                 questao_texto = questao_texto,
                 tipo = tipo,
-                formulario = formulario
+                formulario = formulario,
+                itens = itens_json
             )
             questao.save()
-
+        
         messages.success(request, 'Formulário criado com sucesso!')
 
         return redirect('criar_formulario')

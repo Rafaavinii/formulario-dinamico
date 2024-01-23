@@ -43,45 +43,126 @@
 <script>
     let questaoCount = 1;
 
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     function adicionarQuestao() {
         const container = document.getElementById('questoes-container');
+        const questaoCount = container.getElementsByClassName('card').length + 1;
 
-        const questaoHTML = `
-            <div class="card mt-3">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="questao${questaoCount}">Questão ${questaoCount}:</label>
-                        <input type="text" class="form-control" id="questao${questaoCount}" name="questao${questaoCount}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tipo${questaoCount}">Tipo de Questão:</label>
-                        <select class="form-control" id="tipo${questaoCount}" name="tipo${questaoCount}" onchange="tipoQuestaoChange(this)" required>
-                            <option value="escolha_unica">Escolha Única</option>
-                            <option value="multipla_escolha">Escolha Múltipla</option>
-                            <option value="texto">Texto</option>
-                            <option value="true_false">Verdadeiro ou Falso</option>
-                            <option value="data">Data</option>
-                            <option value="numero">Número</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="opcoes${questaoCount}" style="display: block;">
-                        <label>Opções de Resposta:</label>
-                        <button type="button" class="btn btn-secondary" onclick="adicionarOpcao(${questaoCount})">Adicionar Opção</button>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="opcao1-${questaoCount}" name="opcoes${questaoCount}[]" disabled>
-                            <input type="text" class="form-control" id="opcao1-text-${questaoCount}" name="opcoesText${questaoCount}[]" placeholder="Opção 1">
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-danger" onclick="removerQuestao(this)">Remover Questão</button>
-                </div>
-            </div>
-        `;
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card mt-3';
 
-        container.innerHTML += questaoHTML;
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.className = 'card-body';
+
+        const formGroupQuestao = document.createElement('div');
+        formGroupQuestao.className = 'form-group';
+
+        const labelQuestao = document.createElement('label');
+        labelQuestao.setAttribute('for', `questao${questaoCount}`);
+        labelQuestao.innerText = `Questão ${questaoCount}:`;
+
+        const inputQuestao = document.createElement('input');
+        inputQuestao.type = 'text';
+        inputQuestao.className = 'form-control';
+        inputQuestao.id = `questao${questaoCount}`;
+        inputQuestao.name = `questao${questaoCount}`;
+        inputQuestao.required = true;
+
+        formGroupQuestao.appendChild(labelQuestao);
+        formGroupQuestao.appendChild(inputQuestao);
+
+        const formGroupTipo = document.createElement('div');
+        formGroupTipo.className = 'form-group';
+
+        const labelTipo = document.createElement('label');
+        labelTipo.setAttribute('for', `tipo${questaoCount}`);
+        labelTipo.innerText = 'Tipo de Questão:';
+
+        const selectTipo = document.createElement('select');
+        selectTipo.className = 'form-control';
+        selectTipo.id = `tipo${questaoCount}`;
+        selectTipo.name = `tipo${questaoCount}`;
+        selectTipo.setAttribute('onchange', 'tipoQuestaoChange(this)');
+        selectTipo.required = true;
+
+        // Adicione as opções ao elemento select
+        const tipos = ['escolha_unica', 'multipla_escolha', 'texto', 'true_false', 'data', 'numero'];
+        tipos.forEach(function(tipo) {
+            const option = document.createElement('option');
+            option.value = tipo;
+            option.text = capitalize(tipo.replace('_', ' ')); // Adicione um método capitalize se necessário
+            selectTipo.appendChild(option);
+        });
+
+        formGroupTipo.appendChild(labelTipo);
+        formGroupTipo.appendChild(selectTipo);
+
+        const formGroupOpcoes = document.createElement('div');
+        formGroupOpcoes.className = 'form-group';
+        formGroupOpcoes.id = `opcoes${questaoCount}`;
+
+        const labelOpcoes = document.createElement('label');
+        labelOpcoes.innerText = 'Opções de Resposta:';
+
+        const buttonAdicionarOpcao = document.createElement('button');
+        buttonAdicionarOpcao.type = 'button';
+        buttonAdicionarOpcao.className = 'btn btn-secondary';
+        buttonAdicionarOpcao.setAttribute('onclick', `adicionarOpcao(${questaoCount})`);
+        buttonAdicionarOpcao.innerText = 'Adicionar Opção';
+
+        const divFormCheck = document.createElement('div');
+        divFormCheck.className = 'form-check';
+
+        const inputOpcaoCont = document.createElement('input');
+        inputOpcaoCont.type = 'hidden';
+        inputOpcaoCont.name = `num_opcoes${questaoCount}`;
+        inputOpcaoCont.id = `num_opcoes${questaoCount}`;
+
+        const inputCheckbox = document.createElement('input');
+        inputCheckbox.type = 'checkbox';
+        inputCheckbox.className = 'form-check-input';
+        inputCheckbox.id = `opcao1-${questaoCount}`;
+        inputCheckbox.name = `opcoes${questaoCount}[]`;
+        inputCheckbox.disabled = true;
+
+        const inputTextOpcao = document.createElement('input');
+        inputTextOpcao.type = 'text';
+        inputTextOpcao.className = 'form-control';
+        inputTextOpcao.id = `opcao1-text-${questaoCount}`;
+        inputTextOpcao.name = `opcao1-text-${questaoCount}`;
+        inputTextOpcao.placeholder = 'Opção 1';
+
+        divFormCheck.appendChild(inputCheckbox);
+        divFormCheck.appendChild(inputTextOpcao);
+        divFormCheck.appendChild(inputOpcaoCont);
+
+        formGroupOpcoes.appendChild(labelOpcoes);
+        formGroupOpcoes.appendChild(buttonAdicionarOpcao);
+        formGroupOpcoes.appendChild(divFormCheck);
+
+        const buttonRemoverQuestao = document.createElement('button');
+        buttonRemoverQuestao.type = 'button';
+        buttonRemoverQuestao.className = 'btn btn-danger';
+        buttonRemoverQuestao.setAttribute('onclick', 'removerQuestao(this)');
+        buttonRemoverQuestao.innerText = 'Remover Questão';
+
+        cardBodyDiv.appendChild(formGroupQuestao);
+        cardBodyDiv.appendChild(formGroupTipo);
+        cardBodyDiv.appendChild(formGroupOpcoes);
+        cardBodyDiv.appendChild(buttonRemoverQuestao);
+
+        cardDiv.appendChild(cardBodyDiv);
+
+        container.appendChild(cardDiv);
+
         document.getElementById('num_questoes').value = questaoCount;
-        questaoCount++;
 
+        
     }
+
 
     function tipoQuestaoChange(select) {
         const questao = select.parentNode.parentNode;
@@ -99,20 +180,37 @@
             opcaoInput.value = '';  // Limpar o campo de texto se o tipo não for escolha múltipla
         }
     }
+
     function adicionarOpcao(questaoNumero) {
         const opcoesDiv = document.getElementById(`opcoes${questaoNumero}`);
         const opcaoCount = opcoesDiv.querySelectorAll('.form-check').length + 1;
 
-        const opcaoHTML = `
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="opcao${opcaoCount}-${questaoNumero}" name="opcoes${questaoNumero}[]" disabled>
-                <input type="text" class="form-control" id="opcao${opcaoCount}-text-${questaoNumero}" name="opcoesText${questaoNumero}[]" placeholder="Opção ${opcaoCount}">
-            </div>
-        `;
+        const divFormCheck = document.createElement('div');
+        divFormCheck.className = 'form-check';
 
-        opcoesDiv.innerHTML += opcaoHTML;
+        const inputCheckbox = document.createElement('input');
+        inputCheckbox.type = 'checkbox';
+        inputCheckbox.className = 'form-check-input';
+        inputCheckbox.id = `opcao${opcaoCount}-${questaoNumero}`;
+        inputCheckbox.name = `opcoes${questaoNumero}[]`;
+        inputCheckbox.disabled = true;
+
+        const inputTextOpcao = document.createElement('input');
+        inputTextOpcao.type = 'text';
+        inputTextOpcao.className = 'form-control';
+        inputTextOpcao.id = `opcao${opcaoCount}-text-${questaoNumero}`;
+        inputTextOpcao.name = `opcao${opcaoCount}-text-${questaoNumero}`;
+        inputTextOpcao.placeholder = `Opção ${opcaoCount}`;
+
+        divFormCheck.appendChild(inputCheckbox);
+        divFormCheck.appendChild(inputTextOpcao);
+
+        opcoesDiv.appendChild(divFormCheck);
+
+        document.getElementById(`num_opcoes${questaoNumero}`).value = opcaoCount;
 
     }
+
 
     function removerQuestao(botao) {
         const questao = botao.parentNode.parentNode;
