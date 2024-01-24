@@ -3,6 +3,7 @@ from datetime import datetime
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .models import FormDinamico, Questao
 import json
 
 def criar_formulario(request):
@@ -52,5 +53,27 @@ def criar_formulario(request):
         messages.success(request, 'Formulário criado com sucesso!')
 
         return redirect('criar_formulario')
+
+def responder_formulario_view(request, formulario_id):
+    if request.method == 'GET':
+        formulario = FormDinamico.objects.get(id=formulario_id)
+        context = {
+            'nome': formulario.nome,
+            'descricao': formulario.descricao,
+            'questoes': [],
+        }
+
+        questoes = Questao.objects.filter(formulario_id=formulario.id)
+
+        for questao in questoes:
+            questao_dict = {}
+            questao_dict['questao_texto'] = questao.questao_texto
+            questao_dict['tipo'] = questao.tipo
+            if questao.tipo == 'escolha_unica' or questao.tipo == 'multipla_escolha':
+                questao_dict['itens'] = json.loads(questao.itens)
+        
+            context['questoes'].append(questao_dict)
+
+        return render(request, 'responder_formulario.html', context)
 
 
