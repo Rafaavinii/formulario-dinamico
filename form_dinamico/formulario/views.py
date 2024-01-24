@@ -57,6 +57,8 @@ def criar_formulario(request):
 
 def responder_formulario_view(request, formulario_id):
     if request.method == 'GET':
+        resposta = Resposta.objects.all()
+        print(resposta)
         formulario = FormDinamico.objects.get(id=formulario_id)
         context = {
             'formulario_id': formulario.id,
@@ -80,23 +82,43 @@ def responder_formulario_view(request, formulario_id):
         return render(request, 'responder_formulario.html', context)
     
     if request.method == 'POST':
-        resposta_texto = request.POST.get('resposta_texto')
-        resposta_escolha_unica = request.POST.get('resposta_escolha_unica')
-        resposta_multipla_escolha = request.POST.getlist('resposta_multipla_escolha')
-        resposta_true_false = request.POST.get('resposta_true_false')
-        resposta_data = request.POST.get('resposta_data')
-        resposta_numero = request.POST.get('resposta_numero')
+        questoes = request.POST.getlist('questao_id')
+        for questao in questoes:
+            resposta_texto = request.POST.get(f'resposta_texto_{questao}')
+            resposta_escolha_unica = request.POST.get(f'resposta_escolha_unica_{questao}')
+            resposta_multipla_escolha = request.POST.getlist(f'resposta_multipla_escolha_{questao}')
+            resposta_true_false = request.POST.get(f'resposta_true_false_{questao}')
+            resposta_data = request.POST.get(f'resposta_data_{questao}')
+            resposta_numero = request.POST.get(f'resposta_numero_{questao}')
 
-        respostas = [resposta_texto, resposta_escolha_unica, resposta_multipla_escolha, resposta_data, resposta_numero, resposta_true_false]
+            resposta_valor = obter_valor_nao_none(
+                resposta_texto,
+                resposta_escolha_unica,
+                resposta_multipla_escolha,
+                resposta_true_false,
+                resposta_data,
+                resposta_numero
+            )
 
-        ids_questoes = request.POST.getlist('questao_id')
+            resposta = Resposta.objects.create(
+                resposta_texto = resposta_valor,
+                questao_id = questao,
+                data_resposta = '2024-02-14',
+                hora = '13',
+                user_id = 1,
+            )
 
-        print(respostas, ids_questoes, len(ids_questoes))
+            resposta.save()
 
         return HttpResponse('Respondido!')
 
 
 
+def obter_valor_nao_none(*valores):
+    for valor in valores:
+        if valor is not None:
+            return valor
+    return None  # Retorna None se todos os valores forem None
 
 
 

@@ -22,12 +22,12 @@
                 <h3 class="mt-3">{{ forloop.counter }}. {{ questao.questao_texto }}</h3>
                 {% if questao.tipo ==  'texto' %}
                     <div class="input-group input-group-sm mb-3">
-                        <input type="text" class="form-control" name="resposta_texto">
+                        <input type="text" class="form-control" name="resposta_texto_{{ questao.questao_id }}">
                     </div>
                 {% elif questao.tipo ==  'escolha_unica' %}
                     {% for item in questao.itens %}
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="resposta_escolha_unica" id="{{ item }}" value="{{ item }}">
+                            <input class="form-check-input" type="radio" name="resposta_escolha_unica_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
                             <label class="form-check-label" for="{{ item }}">
                                 {{ item }}
                             </label>
@@ -36,29 +36,29 @@
                 {% elif questao.tipo ==  'multipla_escolha' %}
                     {% for item in questao.itens %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="resposta_multipla_escolha" id="{{ item }}" value="{{ item }}">
+                        <input class="form-check-input" type="checkbox" name="resposta_multipla_escolha_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
                         <label class="form-check-label" for="{{ item }}">
                             {{ item }}
                         </label>
                     </div>
                     {% endfor %}
                 {% elif questao.tipo ==  'data' %}
-                    <input type="date" name="resposta_data" id="data">
+                    <input type="date" name="resposta_data_{{ questao.questao_id }}" id="data">
                 {% elif questao.tipo ==  'true_false' %}
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="resposta_true_false" id="sim" value="sim">
+                        <input class="form-check-input" type="radio" name="resposta_true_false_{{ questao.questao_id }}" id="sim" value="sim">
                         <label class="form-check-label" for="sim">
                             Verdadeiro
                         </label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="resposta_true_false" id="nao" value="nao">
+                        <input class="form-check-input" type="radio" name="resposta_true_false_{{ questao.questao_id }}" id="nao" value="nao">
                         <label class="form-check-label" for="nao">
                             Falso
                         </label>
                     </div>
                 {% elif questao.tipo ==  'numero' %}
-                    <input type="number" name="resposta_numero">
+                    <input type="number" name="resposta_numero_{{ questao.questao_id }}">
                 {% endif %}
             {% endfor %}
 
