@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'formulario/criar_formulario.css' %}">
+    <link rel="stylesheet" href="{% static 'formulario/responder_formulario.css' %}">
     <title>Responder</title>
 </head>
 <body>
@@ -15,41 +15,55 @@
     <h2 class="mb-4 titulo">{{ nome }}</h2>
 
     <div class="container questoes">
-        {% for questao in questoes %}
-            <h3>{{ forloop.counter }}. {{ questao.questao_texto }}</h3>
-            {% if questao.tipo ==  'texto' %}
-            <input type="text" >
-            {% elif questao.tipo ==  'escolha_unica' %}
-            <select name="escolha_unica" id="escolha_unica">
-                {% for item in questao.itens %}
-                    <option value="{{ item }}">{{ item }}</option>
-                {% endfor %}
-            </select>
-            {% elif questao.tipo ==  'multipla_escolha' %}
-            <select multiple name="escolha_unica" id="escolha_unica">
-                {% for item in questao.itens %}
-                    <option value="{{ item }}">{{ item }}</option>
-                {% endfor %}
-            </select>
-            {% elif questao.tipo ==  'data' %}
-            <input type="date" name="data" id="data">
-            {% elif questao.tipo ==  'true_false' %}
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="true_false" id="sim" value="sim">
-                <label class="form-check-label" for="sim">
-                    Sim
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="true_false" id="nao" value="nao">
-                <label class="form-check-label" for="nao">
-                    Não
-                </label>
-            </div>
-            {% elif questao.tipo ==  'numero' %}
-            <input type="number">
-            {% endif %}
-        {% endfor %}
+        <form id="resposta" method="post" action="{% url 'responder_formulario' formulario_id=formulario_id%}">
+            {% csrf_token %}
+            {% for questao in questoes %}
+                <input type="hidden" name="questao_id" value="{{ questao.questao_id }}">
+                <h3 class="mt-3">{{ forloop.counter }}. {{ questao.questao_texto }}</h3>
+                {% if questao.tipo ==  'texto' %}
+                    <div class="input-group input-group-sm mb-3">
+                        <input type="text" class="form-control" name="resposta_texto">
+                    </div>
+                {% elif questao.tipo ==  'escolha_unica' %}
+                    {% for item in questao.itens %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="resposta_escolha_unica" id="{{ item }}" value="{{ item }}">
+                            <label class="form-check-label" for="{{ item }}">
+                                {{ item }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% elif questao.tipo ==  'multipla_escolha' %}
+                    {% for item in questao.itens %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="resposta_multipla_escolha" id="{{ item }}" value="{{ item }}">
+                        <label class="form-check-label" for="{{ item }}">
+                            {{ item }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                {% elif questao.tipo ==  'data' %}
+                    <input type="date" name="resposta_data" id="data">
+                {% elif questao.tipo ==  'true_false' %}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="resposta_true_false" id="sim" value="sim">
+                        <label class="form-check-label" for="sim">
+                            Verdadeiro
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="resposta_true_false" id="nao" value="nao">
+                        <label class="form-check-label" for="nao">
+                            Falso
+                        </label>
+                    </div>
+                {% elif questao.tipo ==  'numero' %}
+                    <input type="number" name="resposta_numero">
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary mt-3">Responder</button>
+        </form>
     </div>
 </div>
 

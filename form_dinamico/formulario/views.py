@@ -3,7 +3,8 @@ from datetime import datetime
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import FormDinamico, Questao
+from .models import FormDinamico, Questao, Resposta
+from django.http import HttpResponse
 import json
 
 def criar_formulario(request):
@@ -58,6 +59,7 @@ def responder_formulario_view(request, formulario_id):
     if request.method == 'GET':
         formulario = FormDinamico.objects.get(id=formulario_id)
         context = {
+            'formulario_id': formulario.id,
             'nome': formulario.nome,
             'descricao': formulario.descricao,
             'questoes': [],
@@ -67,6 +69,7 @@ def responder_formulario_view(request, formulario_id):
 
         for questao in questoes:
             questao_dict = {}
+            questao_dict['questao_id'] = questao.id 
             questao_dict['questao_texto'] = questao.questao_texto
             questao_dict['tipo'] = questao.tipo
             if questao.tipo == 'escolha_unica' or questao.tipo == 'multipla_escolha':
@@ -75,5 +78,25 @@ def responder_formulario_view(request, formulario_id):
             context['questoes'].append(questao_dict)
 
         return render(request, 'responder_formulario.html', context)
+    
+    if request.method == 'POST':
+        resposta_texto = request.POST.get('resposta_texto')
+        resposta_escolha_unica = request.POST.get('resposta_escolha_unica')
+        resposta_multipla_escolha = request.POST.getlist('resposta_multipla_escolha')
+        resposta_true_false = request.POST.get('resposta_true_false')
+        resposta_data = request.POST.get('resposta_data')
+        resposta_numero = request.POST.get('resposta_numero')
+
+        respostas = [resposta_texto, resposta_escolha_unica, resposta_multipla_escolha, resposta_data, resposta_numero, resposta_true_false]
+
+        ids_questoes = request.POST.getlist('questao_id')
+
+        print(respostas, ids_questoes, len(ids_questoes))
+
+        return HttpResponse('Respondido!')
+
+
+
+
 
 

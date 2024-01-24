@@ -1,0 +1,9 @@
+body {
+    background-color: #F3F3FE;
+}
+
+.formulario {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px rgb(160, 160, 160);
+}
