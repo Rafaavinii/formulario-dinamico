@@ -7,7 +7,6 @@ import json
 
 def criar_formulario(request):
     if request.method == 'GET':
-        print(Questao.objects.get(id=24).itens)
         return render(request, 'criar_formulario.html')
     
     elif request.method == 'POST':
@@ -31,11 +30,16 @@ def criar_formulario(request):
             questao_texto = request.POST.get(f'questao{i}')
             tipo = request.POST.get(f'tipo{i}')
             num_opcoes = request.POST.get(f'num_opcoes{i}')
+            
 
-            itens_lista = []
-            for j in range(1, int(num_opcoes)+1):
-                itens_lista.append(request.POST.get(f'opcao{j}-text-{i}'))
-            itens_json = json.dumps(itens_lista, ensure_ascii=False)
+            itens_json = None
+            if num_opcoes != '':
+                itens_lista = []
+                num_opcoes = int(num_opcoes)
+
+                for j in range(1, num_opcoes+1):
+                    itens_lista.append(request.POST.get(f'opcao{j}-text-{i}'))
+                itens_json = json.dumps(itens_lista, ensure_ascii=False)
 
             questao = Questao.objects.create(
                 questao_texto = questao_texto,
