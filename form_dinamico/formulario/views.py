@@ -57,8 +57,7 @@ def criar_formulario(request):
 
 def responder_formulario_view(request, formulario_id):
     if request.method == 'GET':
-        resposta = Resposta.objects.all()
-        print(resposta)
+        
         formulario = FormDinamico.objects.get(id=formulario_id)
         context = {
             'formulario_id': formulario.id,
@@ -84,27 +83,16 @@ def responder_formulario_view(request, formulario_id):
     if request.method == 'POST':
         questoes = request.POST.getlist('questao_id')
         for questao in questoes:
-            resposta_texto = request.POST.get(f'resposta_texto_{questao}')
-            resposta_escolha_unica = request.POST.get(f'resposta_escolha_unica_{questao}')
-            resposta_multipla_escolha = request.POST.getlist(f'resposta_multipla_escolha_{questao}')
-            resposta_true_false = request.POST.get(f'resposta_true_false_{questao}')
-            resposta_data = request.POST.get(f'resposta_data_{questao}')
-            resposta_numero = request.POST.get(f'resposta_numero_{questao}')
 
-            resposta_valor = obter_valor_nao_none(
-                resposta_texto,
-                resposta_escolha_unica,
-                resposta_multipla_escolha,
-                resposta_true_false,
-                resposta_data,
-                resposta_numero
-            )
+            resposta = request.POST.get(f'resposta_{questao}')
+            if Questao.objects.get(id=questao).tipo == 'multipla_escolha':
+                resposta = request.POST.getlist(f'resposta_{questao}')
 
             resposta = Resposta.objects.create(
-                resposta_texto = resposta_valor,
+                resposta_texto = resposta,
                 questao_id = questao,
-                data_resposta = '2024-02-14',
-                hora = '13',
+                data_resposta = datetime.now().strftime("%Y-%m-%d"),
+                hora = datetime.now().strftime("%H:%M:%S"),
                 user_id = 1,
             )
 
