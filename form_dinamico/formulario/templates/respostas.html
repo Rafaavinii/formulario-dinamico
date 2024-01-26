@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="col" style="width: 30%; margin: auto;">
+        <canvas id="pieChart"></canvas>
+    </div>
+    <div class="col" style="width: 30%; margin: auto;">
+        <canvas id="barChart"></canvas>
+    </div>
+</body>
+<script>
+    var pizzaOpcoes = {{ questao_30.opcoes|safe }};
+    var pizzaTotal = {{ questao_30.totais|safe }};
+    const pieChartCanvas = document.getElementById('pieChart')
+    new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: {
+            labels: pizzaOpcoes,
+            datasets: [{
+                data: pizzaTotal,
+            }]
+        }
+    });
+
+    var barNome = {{ questao_31.opcoes|safe }};
+    console.log(barNome)
+    var barQuantidade = {{ questao_31.totais|safe }};
+
+    const ctx = document.getElementById('barChart');
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: barNome,
+        datasets: [{
+            label: 'Quantidade de Agendamentos',
+            data: barQuantidade,
+            borderWidth: 1,
+            barPercentage: 0.6, // Porcentagem da largura da barra em relação ao espaço disponível
+            categoryPercentage: 1,
+            backgroundColor: '#8502EB',
+
+        }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    position: 'left', // Alinha os rótulos à esquerda
+                    min: 0 // Garante que a escala comece em 0
+                },
+            },
+        }
+    });
+</script>
+</html>

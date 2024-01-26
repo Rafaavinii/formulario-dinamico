@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from datetime import datetime
+from django.db.models import Count
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -100,13 +101,42 @@ def responder_formulario_view(request, formulario_id):
 
         return HttpResponse('Respondido!')
 
+def dashboard_respostas_view(request, formulario_id):
+    if request.method == "GET":
+        questoes = Questao.objects.filter(formulario_id=formulario_id)
 
+        estatistica = {}
 
-def obter_valor_nao_none(*valores):
-    for valor in valores:
-        if valor is not None:
-            return valor
-    return None  # Retorna None se todos os valores forem None
+        for questao in questoes:
+            if questao.tipo == 'escolha_unica':
+                respostas = Resposta.objects.filter(questao_id=questao.id).values('resposta_texto').annotate(total=Count('resposta_texto'))
+                respostas = list(respostas)
+                opcao_total = {'opcoes': [], 'totais': []}
+                for resposta in respostas:
+                    opcao_total['opcoes'].append(resposta['resposta_texto'])
+                    opcao_total['totais'].append(resposta['total'])
+                
+                estatistica[f'questao_{questao.id}'] = opcao_total
+
+            if questao.tipo == 'multipla_escolha':
+                opcoes = {elemento: 0 for elemento in eval(questao.itens)}
+                respostas = Resposta.objects.filter(questao_id=questao.id)
+                for resposta in respostas:
+                    resposta = eval(resposta.resposta_texto)
+                    for res_texto in resposta:
+                        if res_texto in opcoes.keys():
+                            opcoes[res_texto] += 1
+                
+                estatistica[f'questao_{questao.id}'] = {
+                    'opcoes': list(opcoes.keys()),
+                    'totais': list(opcoes.values()),
+                }
+            
+                print(estatistica['questao_31'])
+        
+
+        return render(request, 'respostas.html', estatistica)
+
 
 
 
