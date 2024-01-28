@@ -25,27 +25,58 @@
                         <input type="text" class="form-control" name="resposta_{{ questao.questao_id }}">
                     </div>
                 {% elif questao.tipo ==  'escolha_unica' %}
+                <div class="radio-group">
                     {% for item in questao.itens %}
-                        <div class="form-check">
+                        <input class="radio-input" type="radio" name="resposta_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
+                        <label class="radio-label" for="{{ item }}">
+                        <span class="radio-inner-circle"></span>
+                        {{ item }}
+                        </label>
+                        <!-- <div class="form-check">
                             <input class="form-check-input" type="radio" name="resposta_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
                             <label class="form-check-label" for="{{ item }}">
                                 {{ item }}
                             </label>
-                        </div>
+                        </div> -->
                     {% endfor %}
+                </div>
                 {% elif questao.tipo ==  'multipla_escolha' %}
                     {% for item in questao.itens %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="resposta_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" name="resposta_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
+                            <label class="terms-label" for="{{ item }}">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 200 200" class="checkbox-svg">
+                                <mask fill="white" id="path-1-inside-1_476_5-37">
+                                  <rect height="200" width="200"></rect>
+                                </mask>
+                                <rect mask="url(#path-1-inside-1_476_5-37)" stroke-width="40" class="checkbox-box" height="200" width="200"></rect>
+                                <path stroke-width="15" d="M52 111.018L76.9867 136L149 64" class="checkbox-tick"></path>
+                              </svg>
+                              <span class="label-text">{{ item }}</span>
+                            </label>
+                          </div>
+                        <!-- <input class="form-check-input" type="checkbox" name="resposta_{{ questao.questao_id }}" id="{{ item }}" value="{{ item }}">
                         <label class="form-check-label" for="{{ item }}">
                             {{ item }}
-                        </label>
+                        </label> -->
                     </div>
                     {% endfor %}
                 {% elif questao.tipo ==  'data' %}
                     <input type="date" name="resposta_{{ questao.questao_id }}" id="data">
                 {% elif questao.tipo ==  'true_false' %}
-                    <div class="form-check form-check-inline">
+                    <label class="radio-button">
+                        <input type="radio" name="resposta_{{ questao.questao_id }}" id="sim" value="verdadeiro">
+                        <span class="radio"></span>
+                        Verdadeiro
+                    </label>
+                    
+                    <label class="radio-button">
+                        <input type="radio" name="resposta_{{ questao.questao_id }}" id="sim" value="falso">
+                        <span class="radio"></span>
+                        Falso
+                    </label>
+                    <!-- <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="resposta_{{ questao.questao_id }}" id="sim" value="sim">
                         <label class="form-check-label" for="sim">
                             Verdadeiro
@@ -56,13 +87,18 @@
                         <label class="form-check-label" for="nao">
                             Falso
                         </label>
-                    </div>
+                    </div> -->
                 {% elif questao.tipo ==  'numero' %}
                     <input type="number" name="resposta_{{ questao.questao_id }}">
                 {% endif %}
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary mt-3">Responder</button>
+            <button type="submit" class="mt-4">
+                <span class="shadow"></span>
+                <span class="edge"></span>
+                <span class="front text"> Responder
+                </span>
+            </button>
         </form>
     </div>
 </div>
