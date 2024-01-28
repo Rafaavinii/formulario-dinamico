@@ -105,9 +105,17 @@ def dashboard_respostas_view(request, formulario_id):
     if request.method == "GET":
         questoes = Questao.objects.filter(formulario_id=formulario_id)
 
-        estatistica = {}
+        context = {'questoes' : []}
 
+        estatistica = {}
         for questao in questoes:
+
+            questao_data = {
+                'id_questao': questao.id,
+                'questao_texto': questao.questao_texto,
+                'questao_tipo': questao.tipo,
+            }
+
             if questao.tipo == 'escolha_unica':
                 respostas = Resposta.objects.filter(questao_id=questao.id).values('resposta_texto').annotate(total=Count('resposta_texto'))
                 respostas = list(respostas)
@@ -115,7 +123,7 @@ def dashboard_respostas_view(request, formulario_id):
                 for resposta in respostas:
                     opcao_total['opcoes'].append(resposta['resposta_texto'])
                     opcao_total['totais'].append(resposta['total'])
-                
+                opcao_total.update({'questao': questao_data})
                 estatistica[f'questao_{questao.id}'] = opcao_total
 
             if questao.tipo == 'multipla_escolha':
@@ -130,12 +138,11 @@ def dashboard_respostas_view(request, formulario_id):
                 estatistica[f'questao_{questao.id}'] = {
                     'opcoes': list(opcoes.keys()),
                     'totais': list(opcoes.values()),
+                    'questao': questao_data,
                 }
-            
-                print(estatistica['questao_31'])
-        
+        print(estatistica)
 
-        return render(request, 'respostas.html', estatistica)
+        return render(request, 'respostas.html', {'questoes': estatistica})
 
 
 
