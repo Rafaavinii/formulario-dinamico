@@ -6,10 +6,70 @@ body {
     padding-left: 0;
 }
 
+.counter {
+    color: #8c00ff;
+}
+
 .formulario {
     background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 1px 1px rgb(160, 160, 160);
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+.input-text {
+    min-height: 40px;
+    width: 80%;
+    padding: 0 1rem;
+    color: #000;
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 6px 0 0 6px;
+    background-color: transparent;
+}
+  
+.span-text {
+    min-height: 40px;
+    padding: .5em 1em;
+    border: none;
+    border-radius: 6px 0px 0 6px;
+    background-color: #5e4dcd;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color .3s ease-in-out;
+}
+  
+.span-text:hover {
+    background-color: #5e5dcd;
+}
+  
+.input-text:focus, .input-text:focus-visible {
+    border-color: #8c00ff;
+    outline: none;
+}
+
+.input-date {
+    width: 20%;
+    padding: 15px;
+    color: #000;
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+
+input[type="date"]::webkit-calendar-picker-indicator {
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #be00a5;
+    box-shadow: 3px 3px 6px #1e1e1f,
+                -3px -3px 6px  #141314;
 }
 
 button {

@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from datetime import datetime
-from django.db.models import Count
+from django.db.models import Count, Value
+from django.db.models.functions import Coalesce
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import FormDinamico, Questao, Resposta
 from django.http import HttpResponse
 import json
+
 
 def criar_formulario(request):
     if request.method == 'GET':
@@ -105,8 +107,6 @@ def dashboard_respostas_view(request, formulario_id):
     if request.method == "GET":
         questoes = Questao.objects.filter(formulario_id=formulario_id)
 
-        context = {'questoes' : []}
-
         estatistica = {}
         for questao in questoes:
 
@@ -117,8 +117,10 @@ def dashboard_respostas_view(request, formulario_id):
             }
 
             if questao.tipo == 'escolha_unica':
-                respostas = Resposta.objects.filter(questao_id=questao.id).values('resposta_texto').annotate(total=Count('resposta_texto'))
+                respostas = Resposta.objects.filter(questao_id=questao.id).values('resposta_texto').annotate(total=Coalesce(Count('resposta_texto'), Value(0)))
                 respostas = list(respostas)
+
+                opcoes = {elemento: 0 for elemento in eval(questao.itens)}
                 opcao_total = {'opcoes': [], 'totais': []}
                 for resposta in respostas:
                     opcao_total['opcoes'].append(resposta['resposta_texto'])
@@ -140,6 +142,59 @@ def dashboard_respostas_view(request, formulario_id):
                     'totais': list(opcoes.values()),
                     'questao': questao_data,
                 }
+            
+            if questao.tipo == 'texto':
+                respostas = Resposta.objects.filter(questao_id=questao.id)
+                valor_resposta = []
+
+                for resposta in respostas:
+                    valor_resposta.append(resposta.resposta_texto)
+                
+                estatistica[f'questao_{questao.id}'] = {
+                    'respostas': valor_resposta,
+                    'questao': questao_data,
+                }
+            
+            if questao.tipo == 'true_false':
+                respostas = Resposta.objects.filter(questao_id=questao.id)
+                opcoes = {'verdade': 0, 'falso': 0}
+
+                for resposta in respostas:
+                    if resposta.resposta_texto == 'falso':
+                        opcoes['falso'] += 1
+                    else: 
+                        opcoes['verdade'] += 1
+                
+                estatistica[f'questao_{questao.id}'] = {
+                    'opcoes': list(opcoes.keys()),
+                    'totais': list(opcoes.values()),
+                    'questao': questao_data,
+                }
+            
+            if questao.tipo == 'data':
+                respostas = Resposta.objects.filter(questao_id=questao.id)
+                valor_resposta = []
+
+                for resposta in respostas:
+                    valor_resposta.append(resposta.resposta_texto)
+                
+                estatistica[f'questao_{questao.id}'] = {
+                    'respostas': valor_resposta,
+                    'questao': questao_data,
+                }
+            
+            if questao.tipo == 'numero':
+                respostas = Resposta.objects.filter(questao_id=questao.id)
+                valor_resposta = []
+
+                for resposta in respostas:
+                    valor_resposta.append(resposta.resposta_texto)
+                
+                estatistica[f'questao_{questao.id}'] = {
+                    'respostas': valor_resposta,
+                    'questao': questao_data,
+                }
+                    
         print(estatistica)
 
         return render(request, 'respostas.html', {'questoes': estatistica})

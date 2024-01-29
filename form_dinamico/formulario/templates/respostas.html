@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         {% for key, value in questoes.items %}
+        
             {% if value.questao.questao_tipo == 'escolha_unica' %}
-                <div class="card">
+                <div class="card mt-5">
                     <h3>{{value.questao.questao_texto}}</h3>
                     <div class="card-body">
                         <div class="col" style="width: 30%; margin: auto;">
-                            <canvas id="pieChart{{ key }}"></canvas>
+                            <div id="pieChart{{ key }}"></div>
                         </div>
                     </div>
                 </div>
@@ -26,8 +28,8 @@
             {% elif value.questao.questao_tipo == 'multipla_escolha' %}
                 <div class="card mt-5">
                     <h3>{{value.questao.questao_texto}}</h3>
-                    <div class="col" style="width: 30%; margin: auto;">
-                        <canvas id="barChart{{ key }}"></canvas>
+                    <div class="col" style="width: 50%; margin: auto;">
+                        <div id="barChart{{ key }}"></div>
                     </div>
                 </div>
                 <script>
@@ -35,59 +37,162 @@
                         criarGraficoBarras("barChart{{ key }}", {{ value.opcoes|safe }}, {{ value.totais|safe }});
                     });
                 </script>
+            {% elif value.questao.questao_tipo == 'texto' %}
+                <div class="card mt-5">
+                    <h3>{{value.questao.questao_texto}}</h3>
+                    <div class="card-body"style="height: 50vh; overflow-y: auto;">
+                        <table class="table">
+                            {% for resposta in value.respostas %}
+                                <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ resposta }}</td>
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                          </table>
+                    </div>
+                </div>
+            {% elif value.questao.questao_tipo == 'true_false' %}
+                <div class="card mt-5">
+                    <h3>{{value.questao.questao_texto}}</h3>
+                    <div class="card-body">
+                        <div class="col" style="width: 40%; margin: auto;">
+                            <div id="doughnutChart{{ key }}"></div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    window.addEventListener('load', function() {
+                        criarGraficoDoughnut("doughnutChart{{ key }}", {{ value.opcoes|safe }}, {{ value.totais|safe }});
+                    });
+                </script>
+            {% elif value.questao.questao_tipo == 'data' %}
+                <div class="card mt-5">
+                    <h3>{{value.questao.questao_texto}}</h3>
+                    <div class="card-body"style="height: 50vh; overflow-y: auto;">
+                        <table class="table">
+                            {% for resposta in value.respostas %}
+                                <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ resposta }}</td>
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% elif value.questao.questao_tipo == 'numero' %}
+                <div class="card mt-5">
+                    <h3>{{value.questao.questao_texto}}</h3>
+                    <div class="card-body"style="height: 50vh; overflow-y: auto;">
+                        <table class="table">
+                            {% for resposta in value.respostas %}
+                                <tbody>
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ resposta }}</td>
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
     </div>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <script>
 
     function criarGraficoPizza(id, opcoes, totais){
         let pizzaOpcoes = opcoes;
         let pizzaTotal = totais;
-        const pieChartCanvas = document.getElementById(id)
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: {
-                labels: pizzaOpcoes,
-                datasets: [{
-                    data: pizzaTotal,
-                }]
+              
+        var options = {
+            series: pizzaTotal,
+            chart: {
+                width: 380,
+                type: 'pie',
+            },
+            labels: pizzaOpcoes,
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                    width: 200
+                    },
+                    legend: {
+                    position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.getElementById(id), options);
+        chart.render();
+    }
+
+    function criarGraficoDoughnut(id, opcoes, totais){
+        let doughnutOpcoes = opcoes;
+        let doughnutTotal = totais;
+        var options = {
+          series: doughnutTotal,
+          chart: {
+          type: 'donut',
+        },
+        labels: doughnutOpcoes,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
             }
-        });
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.getElementById(id), options);
+        chart.render();
+
     }
 
     function criarGraficoBarras(id, opcoes, totais){
         let barNome = opcoes;
         let barQuantidade = totais;
-    
-        const ctx = document.getElementById(id);
-        
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-            labels: barNome,
-            datasets: [{
-                label: 'Respostas',
-                data: barQuantidade,
-                borderWidth: 1,
-                barPercentage: 0.6, // Porcentagem da largura da barra em relação ao espaço disponível
-                categoryPercentage: 1,
-                backgroundColor: '#8502EB',
-    
-            }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        position: 'left', // Alinha os rótulos à esquerda
-                        min: 0 // Garante que a escala comece em 0
-                    },
-                },
-            }
-        });
+        var options = {
+          series: [{
+          data: barQuantidade
+        }],
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: barNome,
+        }
+        };
+
+        var chart = new ApexCharts(document.getElementById(id), options);
+        chart.render();
 
     }
 

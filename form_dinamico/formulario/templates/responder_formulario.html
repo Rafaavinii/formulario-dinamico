@@ -19,10 +19,11 @@
             {% csrf_token %}
             {% for questao in questoes %}
                 <input type="hidden" name="questao_id" value="{{ questao.questao_id }}">
-                <h3 class="mt-3">{{ forloop.counter }}. {{ questao.questao_texto }}</h3>
+                <h3 class="mt-3"><span class="counter">{{ forloop.counter }}.</span> {{ questao.questao_texto }}</h3>
                 {% if questao.tipo ==  'texto' %}
                     <div class="input-group input-group-sm mb-3">
-                        <input type="text" class="form-control" name="resposta_{{ questao.questao_id }}">
+                        <span class="span-text">T</span>
+                        <input type="text" class="form-control input-text" name="resposta_{{ questao.questao_id }}" required>
                     </div>
                 {% elif questao.tipo ==  'escolha_unica' %}
                 <div class="radio-group">
@@ -63,7 +64,7 @@
                     </div>
                     {% endfor %}
                 {% elif questao.tipo ==  'data' %}
-                    <input type="date" name="resposta_{{ questao.questao_id }}" id="data">
+                    <input type="date" name="resposta_{{ questao.questao_id }}" id="data" class="input-date">
                 {% elif questao.tipo ==  'true_false' %}
                     <label class="radio-button">
                         <input type="radio" name="resposta_{{ questao.questao_id }}" id="sim" value="verdadeiro">
@@ -76,18 +77,6 @@
                         <span class="radio"></span>
                         Falso
                     </label>
-                    <!-- <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="resposta_{{ questao.questao_id }}" id="sim" value="sim">
-                        <label class="form-check-label" for="sim">
-                            Verdadeiro
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="resposta_{{ questao.questao_id }}" id="nao" value="nao">
-                        <label class="form-check-label" for="nao">
-                            Falso
-                        </label>
-                    </div> -->
                 {% elif questao.tipo ==  'numero' %}
                     <input type="number" name="resposta_{{ questao.questao_id }}">
                 {% endif %}
