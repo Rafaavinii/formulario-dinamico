@@ -18,14 +18,21 @@
     <form id="formularioDinamico" method="post" action="{% url 'criar_formulario' %}">
         {% csrf_token %}
         <input type="hidden" name="num_questoes" id="num_questoes" value="0">
-        <div class="form-group mb-4">
+        <div class="form-group mb-3">
+            <input required type="text" class="input-text" name="titulo" id="titulo">
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label class="label-texto">Título do Formulário</label>
+        </div>
+        <!-- <div class="form-group mb-4">
             <label for="titulo"><h4>Título do Formulário</h4></label>
             <input type="text" class="form-control input-text" id="titulo" name="titulo" required>
-        </div>
-
-        <div class="form-group">
-            <label for="descricao"><h4>Descrição</h4></label>
-            <textarea class="form-group input-text" id="descricao" name="descricao" rows="3"></textarea>
+        </div> -->
+        <div class="form-group mt-4">
+            <textarea required type="text" class="input-text" name="titulo" id="titulo"></textarea>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label class="label-texto">Descrição</label>
         </div>
  
         <div id="questoes-container">
@@ -65,37 +72,38 @@
         const questaoCount = container.getElementsByClassName('card').length + 1;
 
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card mt-3 mb-3 card-questao';
+        cardDiv.className = 'card mt-4 mb-4 card-questao';
 
         const cardBodyDiv = document.createElement('div');
         cardBodyDiv.className = 'card-body';
 
-        const formGroupQuestao = document.createElement('div');
-        formGroupQuestao.className = 'form-group';
+        const formRow = document.createElement('div');
+        formRow.className = 'form-row';
 
-        const labelQuestao = document.createElement('label');
-        labelQuestao.setAttribute('for', `questao${questaoCount}`);
-        labelQuestao.innerText = `Questão ${questaoCount}:`;
+        // Questão input group
+        const formGroupQuestao = document.createElement('div');
+        formGroupQuestao.className = 'form-questao col-md-6 form-group p-0';
 
         const inputQuestao = document.createElement('input');
         inputQuestao.type = 'text';
-        inputQuestao.className = 'form-control input-text';
+        inputQuestao.placeholder = `Questão ${questaoCount}`
+        inputQuestao.className = 'input-questao';
         inputQuestao.id = `questao${questaoCount}`;
         inputQuestao.name = `questao${questaoCount}`;
         inputQuestao.required = true;
 
-        formGroupQuestao.appendChild(labelQuestao);
+        const spanQuestao = document.createElement('span');
+        spanQuestao.className = 'input-border';
+
         formGroupQuestao.appendChild(inputQuestao);
+        formGroupQuestao.appendChild(spanQuestao)
 
+        // Tipo de Questão select group
         const formGroupTipo = document.createElement('div');
-        formGroupTipo.className = 'form-group';
-
-        const labelTipo = document.createElement('label');
-        labelTipo.setAttribute('for', `tipo${questaoCount}`);
-        labelTipo.innerText = 'Tipo de Questão:';
+        formGroupTipo.className = 'form-group col-md-6 p-1';
 
         const selectTipo = document.createElement('select');
-        selectTipo.className = 'form-control';
+        selectTipo.className = 'form-control select-questao';
         selectTipo.id = `tipo${questaoCount}`;
         selectTipo.name = `tipo${questaoCount}`;
         selectTipo.setAttribute('onchange', 'tipoQuestaoChange(this)');
@@ -110,9 +118,9 @@
             selectTipo.appendChild(option);
         });
 
-        formGroupTipo.appendChild(labelTipo);
         formGroupTipo.appendChild(selectTipo);
 
+        // Opcçoes input group
         const formGroupOpcoes = document.createElement('div');
         formGroupOpcoes.className = 'form-group';
         formGroupOpcoes.id = `opcoes${questaoCount}`;
@@ -122,12 +130,15 @@
 
         const buttonAdicionarOpcao = document.createElement('button');
         buttonAdicionarOpcao.type = 'button';
-        buttonAdicionarOpcao.className = 'botao-icon';
+        buttonAdicionarOpcao.className = 'botao-adicionar';
         buttonAdicionarOpcao.setAttribute('onclick', `adicionarOpcao(${questaoCount})`);
-        var icone = document.createElement("i");
-        icone.className = "fas fa-plus";
-        icone.textContent = "+";
-        buttonAdicionarOpcao.appendChild(icone)
+
+        const spanIconePlus = document.createElement('span');
+        spanIconePlus.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M15,3C8.373,3,3,8.373,3,15c0,6.627,5.373,12,12,12s12-5.373,12-12C27,8.373,21.627,3,15,3z M21,16h-5v5 c0,0.553-0.448,1-1,1s-1-0.447-1-1v-5H9c-0.552,0-1-0.447-1-1s0.448-1,1-1h5V9c0-0.553,0.448-1,1-1s1,0.447,1,1v5h5 c0.552,0,1,0.447,1,1S21.552,16,21,16z"/></svg>
+        `;
+
+        buttonAdicionarOpcao.appendChild(spanIconePlus)
 
         const divFormCheck = document.createElement('div');
         divFormCheck.className = 'form-check';
@@ -163,10 +174,25 @@
         buttonRemoverQuestao.type = 'button';
         buttonRemoverQuestao.className = 'btn-remover';
         buttonRemoverQuestao.setAttribute('onclick', 'removerQuestao(this)');
-        buttonRemoverQuestao.innerText = 'Remover Questão';
 
-        cardBodyDiv.appendChild(formGroupQuestao);
-        cardBodyDiv.appendChild(formGroupTipo);
+        const spanIcon = document.createElement('span');
+        const spanText = document.createElement('span');
+
+        // Define o conteúdo SVG como string dentro do elemento span
+        spanIcon.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px"><path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"/></svg>
+        `;
+
+        spanText.className = "tooltiptext";
+        spanText.innerText = "Excluir";
+
+        buttonRemoverQuestao.appendChild(spanText)
+        buttonRemoverQuestao.appendChild(spanIcon);
+
+        formRow.appendChild(formGroupQuestao);
+        formRow.appendChild(formGroupTipo);
+
+        cardBodyDiv.appendChild(formRow);
         cardBodyDiv.appendChild(formGroupOpcoes);
         cardBodyDiv.appendChild(buttonRemoverQuestao);
 
@@ -182,10 +208,13 @@
 
     function tipoQuestaoChange(select) {
         const questao = select.parentNode.parentNode;
-        const questaoNumero = questao.querySelector('label').innerText.split(' ')[1][0];
-        const opcoesDiv = questao.querySelector(`#opcoes${questaoNumero}`);
-        const opcaoCheckbox = questao.querySelector(`#opcao1-${questaoNumero}`);
-        const opcaoInput = questao.querySelector(`#opcao1-text-${questaoNumero}`);
+        const elemento = document.getElementsByClassName('input-questao');
+        const valor = elemento.id;
+        console.log(elemento.id)
+        // const questaoNumero = questao.querySelector('label').innerText.split(' ')[1][0];
+        const opcoesDiv = questao.querySelector(`#opcoes${valor}`);
+        const opcaoCheckbox = questao.querySelector(`#opcao1-${valor}`);
+        const opcaoInput = questao.querySelector(`#opcao1-text-${valor}`);
         
         if (select.value === 'multipla_escolha') {
             opcoesDiv.style.display = 'block';
@@ -226,7 +255,6 @@
         document.getElementById(`num_opcoes${questaoNumero}`).value = opcaoCount;
 
     }
-
 
     function removerQuestao(botao) {
         const questao = botao.parentNode.parentNode;

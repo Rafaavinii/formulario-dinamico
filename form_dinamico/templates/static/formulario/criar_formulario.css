@@ -17,6 +17,7 @@ body {
     background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 1px 1px rgb(160, 160, 160);
+    border-left: 6px solid #5264AE;
 }
 
 .pushable {
@@ -106,87 +107,208 @@ body {
     outline: none;
   }
 
-  .btn-remover {
-    padding: 10px 22px;
-    border-radius: 10px;
-    border: 0;
-    background-color: rgb(255, 56, 86);
-    letter-spacing: 1.5px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    box-shadow: rgb(201, 46, 70) 0px 10px 0px 0px;
-    color: hsl(0, 0%, 100%);
-    cursor: pointer;
+  .btn-remover{
+    background-color: transparent; /* Define o fundo transparente */
+    border: none; /* Remove a borda */
+    padding: 0; /* Remove o preenchimento interno */
+    border-radius: 50px;
+    width: 4%;
+    height: 4%;
+    position: relative;
+    display: inline-block;
   }
-  
+
   .btn-remover:hover {
-    box-shadow: rgb(201, 46, 70) 0px 7px 0px 0px;
-  }
-  
-  .btn-remover:active {
-    background-color: rgb(255, 56, 86);
-    /*50, 168, 80*/
-    box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
-    transform: translateY(5px);
-    transition: 200ms;
+    background-color: #9b9b9b05;
   }
 
-  .botao-icon {
-    width: 50px;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    border-radius: 10px;
-    border: 0;
-    background-color: rgb(47, 155, 38);
-    letter-spacing: 1.5px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    box-shadow: rgb(30, 129, 43) 0px 10px 0px 0px;
-    color: hsl(0, 0%, 100%);
-    cursor: pointer;
-  }
-  
-  .botao-icon:hover {
-    box-shadow: rgb(43, 148, 34) 0px 7px 0px 0px;
-  }
-  
-  .botao-icon:active {
-    background-color: rgb(56, 161, 36);
-    /*50, 168, 80*/
-    box-shadow: rgb(26, 116, 31) 0px 0px 0px 0px;
-    transform: translateY(5px);
-  }
-
-  .input-text {
-    max-width: 100%;
-    min-width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    box-shadow: 2px 2px 7px 0 rgb(0, 0, 0, 0.2);
+  .btn-remover:focus {
     outline: none;
-    color: dimgray;
   }
-  
-  .input-text:invalid {
-    animation: justshake 0.3s forwards;
-    color: red;
-  }
-  
-  @keyframes justshake {
-    25% {
-      transform: translateX(5px);
+   
+  .btn-remover .tooltiptext {
+    visibility: hidden;
+    width: 4em;
+    background-color: rgba(0, 0, 0, 0.253);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    left: 100%;
+   }
+   
+  .btn-remover .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgba(0, 0, 0, 0.253) transparent transparent;
+   }
+   
+   .btn-remover:hover .tooltiptext {
+    visibility: visible;
+   }
+
+.botao-adicionar {
+  background-color: transparent; /* Define o fundo transparente */
+  border: none; /* Remove a borda */
+  padding: 0; /* Remove o preenchimento interno */
+  border-radius: 50px;
+  width: 4%;
+  height: 4%;
+  position: relative;
+  display: inline-block;
+}
+
+.form-group {
+  position: relative;
+}
+   
+.input-text {
+  font-size: 16px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #515151;
+  background: transparent;
+}
+   
+   .input-text:focus {
+    outline: none;
+   }
+   
+   .label-texto {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .input-text:focus ~ .label-texto, .input-text:valid ~ .label-texto {
+    top: -20px;
+    font-size: 14px;
+    color: #5264AE;
+   }
+   
+   .bar {
+    position: relative;
+    display: block;
+    width: 100%;
+   }
+   
+   .bar:before, .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .bar:before {
+    left: 50%;
+   }
+   
+   .bar:after {
+    right: 50%;
+   }
+   
+   .input-text:focus ~ .bar:before, .input-text:focus ~ .bar:after {
+    width: 50%;
+   }
+   
+   .highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+   }
+   
+   .input-text:focus ~ .highlight {
+    animation: inputHighlighter 0.3s ease;
+   }
+   
+   @keyframes inputHighlighter {
+    from {
+     background: #5264AE;
     }
-  
-    50% {
-      transform: translateX(-5px);
+   
+    to {
+     width: 0;
+     background: transparent;
     }
-  
-    75% {
-      transform: translateX(5px);
-    }
-  
-    100% {
-      transform: translateX-(5px);
-    }
-  }
+   }
+
+/* input questão */
+.form-questao {
+  --width-of-input: 200px;
+  --border-height: 1px;
+  --border-before-color: rgba(46, 46, 46, 0.39);
+  --border-after-color: #5264AE;
+  --input-hovered-color: #4985e01f;
+  position: relative;
+  width: var(--width-of-input);
+ }
+ /* styling of Input */
+ .input-questao {
+  color: var(--text-before-color);
+  font-size: 0.9rem;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0.5em;
+  padding-block: 0.7em;
+  border: none;
+  border-bottom: var(--border-height) solid var(--border-before-color);
+ }
+ /* styling of animated border */
+ .input-border {
+  position: absolute;
+  background: var(--border-after-color);
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  transition: 0.3s;
+ }
+ /* Hover on Input */
+ .input-questao:hover {
+  background: var(--input-hovered-color);
+ }
+ 
+ .input-questao:focus {
+  outline: none;
+ }
+ /* here is code of animated border */
+ .input-questao:focus ~ .input-border {
+  width: 100%;
+ }
+
+.select-questao {
+  border: none; /* Remove a borda padrão */
+  border-bottom: 1px solid black; /* Adiciona uma borda inferior */
+  padding: 5px;
+  padding-bottom: 4px;
+}
+
+.form-control .select-questao:focus {
+  border: none;
+}
