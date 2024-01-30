@@ -207,16 +207,14 @@
 
 
     function tipoQuestaoChange(select) {
-        const questao = select.parentNode.parentNode;
-        const elemento = document.getElementsByClassName('input-questao');
-        const valor = elemento.id;
-        console.log(elemento.id)
-        // const questaoNumero = questao.querySelector('label').innerText.split(' ')[1][0];
+        const questao = select.parentNode.parentNode.parentNode;
+        const elemento = questao.querySelector('.input-questao');
+        const valor = elemento.placeholder.split(' ')[1];;
         const opcoesDiv = questao.querySelector(`#opcoes${valor}`);
         const opcaoCheckbox = questao.querySelector(`#opcao1-${valor}`);
         const opcaoInput = questao.querySelector(`#opcao1-text-${valor}`);
         
-        if (select.value === 'multipla_escolha') {
+        if (select.value === 'multipla_escolha' || select.value === 'escolha_unica') {
             opcoesDiv.style.display = 'block';
             opcaoCheckbox.disabled = false;
         } else {
