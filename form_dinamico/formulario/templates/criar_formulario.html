@@ -73,6 +73,7 @@
 
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card mt-4 mb-4 card-questao';
+        cardDiv.id = 'card-questao';
 
         const cardBodyDiv = document.createElement('div');
         cardBodyDiv.className = 'card-body';
@@ -83,6 +84,7 @@
         // Questão input group
         const formGroupQuestao = document.createElement('div');
         formGroupQuestao.className = 'form-questao col-md-6 form-group p-0';
+        formGroupQuestao.id = 'questao';
 
         const inputQuestao = document.createElement('input');
         inputQuestao.type = 'text';
@@ -101,6 +103,7 @@
         // Tipo de Questão select group
         const formGroupTipo = document.createElement('div');
         formGroupTipo.className = 'form-group col-md-6 p-1';
+        formGroupTipo.id = 'tipos'
 
         const selectTipo = document.createElement('select');
         selectTipo.className = 'form-control select-questao';
@@ -122,7 +125,7 @@
 
         // Opcçoes input group
         const formGroupOpcoes = document.createElement('div');
-        formGroupOpcoes.className = 'form-group';
+        formGroupOpcoes.className = 'form-group opcoes';
         formGroupOpcoes.id = `opcoes${questaoCount}`;
 
         const labelOpcoes = document.createElement('label');
@@ -259,12 +262,21 @@
         questao.parentNode.removeChild(questao);
 
         // Atualizar os números das questões após a remoção
-        const questoes = document.querySelectorAll('#questoes-container .card');
-        questaoCount = 1;
+        const questoes = document.querySelectorAll('#card-questao');
+        console.log(questoes)
+        let numeroQuestao = 1;
         questoes.forEach((element) => {
-            const label = element.querySelector('label');
-            label.innerText = `Questão ${questaoCount}:`;
-            questaoCount++;
+            const inputQuestao = element.querySelector('input');
+            const divOpcoes = element.querySelector('.opcoes')
+
+            inputQuestao.name = `questao${numeroQuestao}`;
+            inputQuestao.id = `questao${numeroQuestao}`;
+            inputQuestao.placeholder = `Questão ${numeroQuestao}`;
+
+            divOpcoes.id = `opcoes${numeroQuestao}`
+            const buttonAdd = divOpcoes.querySelector('button')
+            buttonAdd.setAttribute('onclick', `adicionarOpcao(${numeroQuestao})`)
+            numeroQuestao++
         });
     }
 </script>
