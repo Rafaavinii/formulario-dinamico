@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'formulario/criar_formulario.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
     <title>Formulário Dinâmico</title>
 </head>
 <body>
@@ -17,22 +18,34 @@
     <form id="formularioDinamico" method="post" action="{% url 'criar_formulario' %}">
         {% csrf_token %}
         <input type="hidden" name="num_questoes" id="num_questoes" value="0">
-        <div class="form-group">
-            <label for="titulo">Título do Formulário:</label>
-            <input type="text" class="form-control" id="titulo" name="titulo" required>
+        <div class="form-group mb-4">
+            <label for="titulo"><h4>Título do Formulário</h4></label>
+            <input type="text" class="form-control input-text" id="titulo" name="titulo" required>
         </div>
 
         <div class="form-group">
-            <label for="descricao">Descrição:</label>
-            <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
+            <label for="descricao"><h4>Descrição</h4></label>
+            <textarea class="form-group input-text" id="descricao" name="descricao" rows="3"></textarea>
         </div>
  
         <div id="questoes-container">
             <!-- Aqui serão adicionadas as questões dinamicamente -->
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="adicionarQuestao()"><i class="fas fa-plus"></i>Adicionar Questão</button>
-        <button type="submit" class="btn btn-success">Salvar Formulário</button>
+        <button type="button" class="btn pushable" onclick="adicionarQuestao()">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front">
+              Adicionar Questão
+            </span>
+        </button>
+        <button type="submit" class="pushable">
+            <span class="shadow"></span>
+            <span class="edge"></span>
+            <span class="front">
+              Salvar
+            </span>
+        </button>
     </form>
 </div>
 
@@ -52,7 +65,7 @@
         const questaoCount = container.getElementsByClassName('card').length + 1;
 
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card mt-3';
+        cardDiv.className = 'card mt-3 mb-3 card-questao';
 
         const cardBodyDiv = document.createElement('div');
         cardBodyDiv.className = 'card-body';
@@ -66,7 +79,7 @@
 
         const inputQuestao = document.createElement('input');
         inputQuestao.type = 'text';
-        inputQuestao.className = 'form-control';
+        inputQuestao.className = 'form-control input-text';
         inputQuestao.id = `questao${questaoCount}`;
         inputQuestao.name = `questao${questaoCount}`;
         inputQuestao.required = true;
@@ -109,9 +122,12 @@
 
         const buttonAdicionarOpcao = document.createElement('button');
         buttonAdicionarOpcao.type = 'button';
-        buttonAdicionarOpcao.className = 'btn btn-secondary';
+        buttonAdicionarOpcao.className = 'botao-icon';
         buttonAdicionarOpcao.setAttribute('onclick', `adicionarOpcao(${questaoCount})`);
-        buttonAdicionarOpcao.innerText = 'Adicionar Opção';
+        var icone = document.createElement("i");
+        icone.className = "fas fa-plus";
+        icone.textContent = "+";
+        buttonAdicionarOpcao.appendChild(icone)
 
         const divFormCheck = document.createElement('div');
         divFormCheck.className = 'form-check';
@@ -130,7 +146,7 @@
 
         const inputTextOpcao = document.createElement('input');
         inputTextOpcao.type = 'text';
-        inputTextOpcao.className = 'form-control';
+        inputTextOpcao.className = 'form-control input-text';
         inputTextOpcao.id = `opcao1-text-${questaoCount}`;
         inputTextOpcao.name = `opcao1-text-${questaoCount}`;
         inputTextOpcao.placeholder = 'Opção 1';
@@ -145,7 +161,7 @@
 
         const buttonRemoverQuestao = document.createElement('button');
         buttonRemoverQuestao.type = 'button';
-        buttonRemoverQuestao.className = 'btn btn-danger';
+        buttonRemoverQuestao.className = 'btn-remover';
         buttonRemoverQuestao.setAttribute('onclick', 'removerQuestao(this)');
         buttonRemoverQuestao.innerText = 'Remover Questão';
 
@@ -197,7 +213,7 @@
 
         const inputTextOpcao = document.createElement('input');
         inputTextOpcao.type = 'text';
-        inputTextOpcao.className = 'form-control';
+        inputTextOpcao.className = 'form-control input-text';
         inputTextOpcao.id = `opcao${opcaoCount}-text-${questaoNumero}`;
         inputTextOpcao.name = `opcao${opcaoCount}-text-${questaoNumero}`;
         inputTextOpcao.placeholder = `Opção ${opcaoCount}`;
