@@ -17,7 +17,7 @@ def criar_formulario(request):
     elif request.method == 'POST':
         titulo = request.POST.get('titulo')
         num_questoes = request.POST.get('num_questoes')
-        descricao = request.POST.get('descricao')
+        descricao = request.POST.get('descricao', '')
         data = datetime.now()
         user = 1
 
@@ -194,8 +194,7 @@ def dashboard_respostas_view(request, formulario_id):
                     'respostas': valor_resposta,
                     'questao': questao_data,
                 }
-                    
-        print(estatistica)
+                
 
         return render(request, 'respostas.html', {'questoes': estatistica})
 

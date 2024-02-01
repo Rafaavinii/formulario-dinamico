@@ -11,8 +11,13 @@
 </head>
 <body>
 
+<div class="container mt-5 formulario p-5 container-titulo">
+        <h2 class="mb-4 titulo">{{ nome }}</h2>
+        <p>{{ descricao }}</p>
+</div>
+
 <div class="container mt-5 formulario p-5">
-    <h2 class="mb-4 titulo">{{ nome }}</h2>
+    
 
     <div class="container questoes">
         <form id="resposta" method="post" action="{% url 'responder_formulario' formulario_id=formulario_id%}">
