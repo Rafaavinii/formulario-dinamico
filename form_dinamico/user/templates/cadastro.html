@@ -14,32 +14,30 @@
         <form class="form">
             <p class="title">Cadastro </p>
             <p class="message">Signup now and get full access to our app. </p>
-                <div class="flex">
-                
-                <label>
-                    <input required="" placeholder="" type="text" class="input">
-                    <span>Firstname</span>
-                </label>
-        
-                <label>
-                    <input required="" placeholder="" type="text" class="input">
-                    <span>Lastname</span>
-                </label>
+            <div class="row">
+                <div class="input-group col">
+                    <input required="" type="text" name="nome" autocomplete="off" class="input nome">
+                    <label class="user-label">Nome</label>
+                </div>
+                <div class="input-group col">
+                    <input required="" type="text" name="sobrenome" autocomplete="off" class="input sobrenome">
+                    <label class="user-label">Sobrenome</label>
+                </div>
             </div>  
                     
-            <label>
-                <input required="" placeholder="" type="email" class="input">
-                <span>Email</span>
-            </label> 
+            <div class="input-group">
+                <input required="" type="text" name="email" autocomplete="off" class="input">
+                <label class="user-label">Email</label>
+            </div>
                 
-            <label>
-                <input required="" placeholder="" type="password" class="input">
-                <span>Password</span>
-            </label>
-            <label>
-                <input required="" placeholder="" type="password" class="input">
-                <span>Confirm password</span>
-            </label>
+            <div class="input-group">
+                <input required="" type="text" name="senha" autocomplete="off" class="input">
+                <label class="user-label">Senha</label>
+            </div>
+            <div class="input-group">
+                <input required="" type="text" name="confirm_senha" autocomplete="off" class="input">
+                <label class="user-label">Confirmação de senha</label>
+            </div>
             <button class="submit">Submit</button>
             <p class="signin">Already have an acount ? <a href="#">Signin</a> </p>
         </form>
