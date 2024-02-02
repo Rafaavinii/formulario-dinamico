@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from user.validators import validar_email, validar_senha
 
@@ -43,8 +45,21 @@ def cadastro_view(request):
         return redirect('entrar')
 
 
-
-
 def entrar_view(request):
     if request.method == 'GET':
         return render(request, 'login.html')
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+
+        user = authenticate(request, username='rafavini', senha='1234')
+        print(user)
+
+        if user is not None:
+            login(request, user)
+            return redirect('pagina_inicial')
+        
+        else:
+            messages.error(request, 'Email ou Senha incorretos.')
+            return render(request, 'login.html')

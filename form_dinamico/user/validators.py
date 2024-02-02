@@ -29,11 +29,11 @@ def validar_email(email):
 
     erro = []
     
-    # Verifica se o e-mail corresponde ao padrão
-    if re.match(padrao, email):
-        erro.append('Email inválido.')
-    elif jah_exist:
-        erro.append('Email já cadastrado.')
+    # # Verifica se o e-mail corresponde ao padrão
+    # if re.match(padrao, email):
+    #     erro.append('Email inválido.')
+    # elif jah_exist:
+    #     erro.append('Email já cadastrado.')
 
     return erro
 
