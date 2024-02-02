@@ -5,42 +5,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'user/cadastro.css' %}">
+    <link rel="stylesheet" href="{% static 'user/base_user.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
     <title>Cadastro</title>
 </head>
 <body>
     <div class="container mt-5">
-        <form class="form">
+        <form class="form p-2" method="post" action="{% url 'cadastro' %}">
+            {% csrf_token %}
             <p class="title">Cadastro </p>
             <p class="message">Signup now and get full access to our app. </p>
-            <div class="row">
-                <div class="input-group col">
-                    <input required="" type="text" name="nome" autocomplete="off" class="input nome">
-                    <label class="user-label">Nome</label>
+            <div class="row pl-3 pr-3">
+                <div class="group input-group col mt-2">
+                    <input required="" type="text" name="nome" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Name</label>
                 </div>
-                <div class="input-group col">
-                    <input required="" type="text" name="sobrenome" autocomplete="off" class="input sobrenome">
-                    <label class="user-label">Sobrenome</label>
+                <div class="group input-group col mt-2">
+                    <input required="" type="text" name="sobrenome" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Sobrenome</label>
+                </div>
+
+                <div class="group input-group mt-4">
+                    <input required="" type="email" name="email" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+
+                <div class="group input-group mt-4">
+                    <input required="" type="password" name="senha" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Senha</label>
+                </div>
+
+                <div class="group input-group mt-4">
+                    <input required="" type="password" name="confirm_senha" class="input">
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Confirmação de Senha</label>
                 </div>
             </div>  
-                    
-            <div class="input-group">
-                <input required="" type="text" name="email" autocomplete="off" class="input">
-                <label class="user-label">Email</label>
+            <div class="d-flex justify-content-center mt-4">
+                <button class="button-cadastrar">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front">
+                      Cadastrar
+                    </span>
+                </button>
             </div>
-                
-            <div class="input-group">
-                <input required="" type="text" name="senha" autocomplete="off" class="input">
-                <label class="user-label">Senha</label>
-            </div>
-            <div class="input-group">
-                <input required="" type="text" name="confirm_senha" autocomplete="off" class="input">
-                <label class="user-label">Confirmação de senha</label>
-            </div>
-            <button class="submit">Submit</button>
-            <p class="signin">Already have an acount ? <a href="#">Signin</a> </p>
+            <p class="signin d-flex justify-content-center mb-0 mt-1">Já tem uma conta? <a href="{% url 'entrar' %}"> Sign in</a> </p>
+
         </form>
+        {% for mensagem in messages %}
+            {% if mensagem.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ mensagem }}
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
 </body>
 </html>
