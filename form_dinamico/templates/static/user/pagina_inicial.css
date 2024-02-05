@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(225, 233, 243);
+}
+
+.sidebar {
+    background-color: white;
+    height: 100vh;
+    color: rgb(39, 35, 39);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+section .container {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    color: rgb(209, 209, 209);
+    border-radius: 5px;
+    box-shadow: 2px 4px 2px 2px rgb(171, 175, 180);
+}

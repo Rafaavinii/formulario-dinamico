@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from formulario.models import FormDinamico
 
 from user.validators import validar_email, validar_senha
 
@@ -53,8 +54,7 @@ def entrar_view(request):
         email = request.POST.get('email')
         senha = request.POST.get('senha')
 
-        user = authenticate(request, username='rafavini', senha='1234')
-        print(user)
+        user = authenticate(request, username=email, password=senha)
 
         if user is not None:
             login(request, user)
@@ -63,3 +63,37 @@ def entrar_view(request):
         else:
             messages.error(request, 'Email ou Senha incorretos.')
             return render(request, 'login.html')
+
+def logout_view(request):
+    # logout do candidato
+    logout(request)
+    return redirect('pagina_inicial')
+
+@login_required
+def dashboard_view(request):
+    if request.method == 'GET':
+        context = {}
+
+        user = request.user
+
+        usuario = User.objects.get(id=user.id)
+        formularios = FormDinamico.objects.filter(user_id=user.id)
+
+        lista_formulario = []
+        for formulario in formularios:
+            dicionario = {
+                'nome': formulario.nome,
+                'descricao': formulario.descricao,
+                'data': formulario.data_criacao,
+            }
+            lista_formulario.append(dicionario)
+
+        context['nome'] = usuario.first_name
+        context['sobrenome'] = usuario.last_name
+        context['email'] = usuario.email
+        context['quantidade_formulario'] = formularios.count()
+        context['formularios'] = lista_formulario
+
+        print(context['formularios'])
+
+        return render(request, 'pagina_inicial.html', context)
