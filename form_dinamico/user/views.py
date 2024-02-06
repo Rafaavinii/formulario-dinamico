@@ -67,7 +67,7 @@ def entrar_view(request):
 def logout_view(request):
     # logout do candidato
     logout(request)
-    return redirect('pagina_inicial')
+    return redirect('entrar')
 
 @login_required
 def dashboard_view(request):
@@ -77,7 +77,7 @@ def dashboard_view(request):
         user = request.user
 
         usuario = User.objects.get(id=user.id)
-        formularios = FormDinamico.objects.filter(user_id=user.id)
+        formularios = FormDinamico.objects.filter(user_id=1)
 
         lista_formulario = []
         for formulario in formularios:
@@ -93,7 +93,5 @@ def dashboard_view(request):
         context['email'] = usuario.email
         context['quantidade_formulario'] = formularios.count()
         context['formularios'] = lista_formulario
-
-        print(context['formularios'])
 
         return render(request, 'pagina_inicial.html', context)

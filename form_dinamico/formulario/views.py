@@ -19,13 +19,13 @@ def criar_formulario(request):
         num_questoes = request.POST.get('num_questoes')
         descricao = request.POST.get('descricao', '')
         data = datetime.now()
-        user = 1
+        user = request.user
 
         formulario = FormDinamico.objects.create(
             nome=titulo,
             descricao=descricao,
             data_criacao=data,
-            user_id=user,
+            user=user,
         )
 
         formulario.save()
@@ -36,7 +36,6 @@ def criar_formulario(request):
             tipo = request.POST.get(f'tipo{i}')
             num_opcoes = request.POST.get(f'num_opcoes{i}')
             
-
             itens_json = None
             if num_opcoes != '':
                 itens_lista = []
