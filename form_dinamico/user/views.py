@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from formulario.models import FormDinamico
+from formulario.models import FormDinamico, Questao, Resposta
 
 from user.validators import validar_email, validar_senha
 
@@ -79,6 +80,9 @@ def dashboard_view(request):
         usuario = User.objects.get(id=user.id)
         formularios = FormDinamico.objects.filter(user_id=1)
 
+        resultado = Resposta.objects.filter(questao__formulario__id=45).values('questao_id').annotate(total=Count('questao_id'))
+        quantidade_resposta = max(resultado.values('total'), key=lambda x: x['total'])['total']
+
         lista_formulario = []
         for formulario in formularios:
             dicionario = {
@@ -91,7 +95,8 @@ def dashboard_view(request):
         context['nome'] = usuario.first_name
         context['sobrenome'] = usuario.last_name
         context['email'] = usuario.email
-        context['quantidade_formulario'] = formularios.count()
         context['formularios'] = lista_formulario
+        context['quantidade_resposta'] = quantidade_resposta
+        context['quantidade_formulario'] = formularios.count()
 
         return render(request, 'pagina_inicial.html', context)
