@@ -80,12 +80,14 @@ def dashboard_view(request):
         usuario = User.objects.get(id=user.id)
         formularios = FormDinamico.objects.filter(user_id=1)
 
-        resultado = Resposta.objects.filter(questao__formulario__id=45).values('questao_id').annotate(total=Count('questao_id'))
+        resultado = Resposta.objects.filter(questao__formulario__user=1).values('questao_id').annotate(total=Count('questao_id'))
+        print(resultado)
         quantidade_resposta = max(resultado.values('total'), key=lambda x: x['total'])['total']
 
         lista_formulario = []
         for formulario in formularios:
             dicionario = {
+                'id': formulario.id,
                 'nome': formulario.nome,
                 'descricao': formulario.descricao,
                 'data': formulario.data_criacao,
