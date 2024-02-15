@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.db.models import Count
@@ -102,3 +103,13 @@ def dashboard_view(request):
         context['quantidade_formulario'] = formularios.count()
 
         return render(request, 'pagina_inicial.html', context)
+
+def buscar_formulario_view(request):
+    if 'term' in request.GET:
+        term = request.GET['term']
+        formularios = FormDinamico.objects.filter(nome__icontains=term)
+        lista_formulario = [{'nome': formulario.nome, 'data': formulario.data_criacao} for formulario in formularios]
+        return JsonResponse({'formularios': lista_formulario})
+    return JsonResponse({})
+
+# def visualizar_formulario_view(request):

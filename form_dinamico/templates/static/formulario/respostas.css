@@ -25,29 +25,24 @@ body{
     display: flex;
     align-items: center;
 }
-  
-.title span {
-    position: relative;
-    padding: 0.5rem;
-    background-color: #8c00ff;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 9999px;
-}
-  
-.title span svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    height: 1rem;
+
+.icon-form {
+    width: 60px;
+    background-color: #efdcff9a;
+    border-radius: 50px;
+    color: #8c00ff;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    padding-bottom: 5px;
 }
   
 .title-text {
     margin-left: 0.5rem;
     color: #374151;
     font-size: 18px;
+    margin-top: 10px;
+    font-family: 'Olswad', sans-serif;
 }
   
 .percent {

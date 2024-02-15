@@ -106,7 +106,12 @@ def dashboard_respostas_view(request, formulario_id):
     if request.method == "GET":
         questoes = Questao.objects.filter(formulario_id=formulario_id)
 
+        resultado = Resposta.objects.filter(questao__formulario_id=formulario_id).values('questao_id').annotate(total=Count('questao_id'))
+        quantidade_resposta = max(resultado.values('total'), key=lambda x: x['total'])['total']
+
         estatistica = {}
+        estatistica['quantidade_resposta'] = quantidade_resposta
+
         for questao in questoes:
 
             questao_data = {
@@ -193,6 +198,8 @@ def dashboard_respostas_view(request, formulario_id):
                     'respostas': valor_resposta,
                     'questao': questao_data,
                 }
+            
+        print(estatistica)
                 
 
         return render(request, 'respostas.html', {'questoes': estatistica})

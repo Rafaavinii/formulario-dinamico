@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="search mt-3 col-12">
-                    <input type="text" class="search__input" placeholder="Type your text">
+                    <input type="text" id="input_busca" class="search__input" placeholder="Type your text">
                     <button class="search__button">
                         <i class="bi bi-search"></i>
                     </button>
@@ -64,7 +64,7 @@
                     {% if formularios %}
                         <table class="table">
                             {% for formulario in formularios %}
-                            <tbody>
+                            <tbody id="table_form">
                             <a href="#">
                                 <tr>
                                     <th scope="row">{{ forloop.counter }}</th>
@@ -72,9 +72,9 @@
                                     <td>{{ formulario.data }}</td>
                                     <td>
                                         <a href=""><button class="btn-icons"><i class="bi bi-trash"></i></button></a>
-                                        <button class="btn-icons"><i class="bi bi-pencil-square"></i></i></button>
+                                        <a href=""><button class="btn-icons"><i class="bi bi-pencil-square"></i></i></button></a>
                                         <a href="{% url 'respostas' formulario.id %}"><button class="btn-icons"><i class="bi bi-reception-4"></i></button></a>
-                                        <button class="btn-icons"><i class="bi bi-eye-fill"></i></button>
+                                        <a href=""><button class="btn-icons"><i class="bi bi-eye-fill"></i></button></a>
                                     </td>
                                     
                                 </tr>
@@ -111,4 +111,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
   </body>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var inputBusca = document.getElementById('input_busca')
+        var listaResultado = document.getElementById('table_form')
+
+        inputBusca.addEventListener('input', function() {
+            var term = inputBusca.value
+
+            fetch('/user/formulario/?term=' + term)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro de rede')
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    listaResultado.innerHTML = ''
+
+                    data.formularios.forEach((formulario, index) => {
+                        var row = listaResultado.insertRow()
+                        var ind = row.insertCell()
+                        var nome = row.insertCell()
+                        var data = row.insertCell()
+                        var action = row.insertCell()
+
+                        ind.textContent = index + 1
+                        nome.textContent = formulario.nome
+                        data.textContent = formulario.data
+
+                    });
+                })
+                .catch(error => {
+                    console.error('Error during fetch operation:', error);
+                });
+        })
+    })
+  </script>
 </html>
