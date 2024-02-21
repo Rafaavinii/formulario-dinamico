@@ -40,8 +40,8 @@
                 </ul>
             </div>
         </nav>
-        <section class="col-md-10 pt-4 home-section">
-            <div class="row m-2 justify-content-between">
+        <section class="col-md-10 pt-3 home-section">
+            <div class="row m-2 justify-content-between" style="height: 90vh;">
                 <div class="col-xxl-4 col-md-5 card">
                     <div class="cad-title"><h5 class="title">Formulários Cadastrados</h5></div>
                     <div class="card-body d-flex">
@@ -54,11 +54,13 @@
                         <span class="icon-form"><i class="bi bi-check2-square"></i></span><h3 class="ml-2">{{ quantidade_resposta }}</h3>
                     </div>
                 </div>
-                <div class="search mt-3 col-12">
-                    <input type="text" id="input_busca" class="search__input" placeholder="Type your text">
-                    <button class="search__button">
-                        <i class="bi bi-search"></i>
-                    </button>
+                <div class="mt-1 col-12">
+                    <div class="search mt-3">
+                        <input type="text" id="input_busca" class="search__input" placeholder="Type your text">
+                        <button class="search__button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="container-form mt-1 col-12">
                     {% if formularios %}
@@ -86,19 +88,21 @@
                         <h3>Você ainda não cadastrou formulário</h3>
                     {% endif %}
                 </div>
-                <a href="{% url 'criar_formulario' %}" class="mt-4 col-12">
-                    <div>
-                        <div class="">
-                            <button class="button-cadastrar">
-                                <span class="shadow"></span>
-                                <span class="edge"></span>
-                                <span class="front">
-                                Criar Formulário
-                                </span>
-                            </button>
+                <div class="mt-1 col-12">
+                    <a href="{% url 'criar_formulario' %}" class="mt-4 col-12">
+                        <div>
+                            <div class="">
+                                <button class="button-cadastrar">
+                                    <span class="shadow"></span>
+                                    <span class="edge"></span>
+                                    <span class="front">
+                                    Criar Formulário
+                                    </span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
 
         </section>
